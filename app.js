@@ -16,24 +16,23 @@ arduinoSerialPort.on('open',function() {
 });
 
 app.get('/', function (req, res) {
-    return res.send('Working');
+  res.sendFile(__dirname + '/index.html');
 })
 
 app.get('/:action', function (req, res) {
     
    var action = req.params.action || req.param('action');
     
-    if(action == 'led'){
+    if(action == 'led') {
         arduinoSerialPort.write("w");
-        return res.send('Led light is on!');
+        return res.send({ on: true });
     } 
     if(action == 'off') {
         arduinoSerialPort.write("t");
-        return res.send("Led light is off!");
+        return res.send({ on: false });
     }
     
-    return res.send('Action: ' + action);
- 
+    return res.send({ action });
 });
 
 app.listen(port, function () {

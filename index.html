@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Communicating from Node.js to an Arduino</title>
+    </head>
+    <body>
+        <h1>Communicating from Node.js to an Arduino</h1>
+
+        <button id="lightOn">Turn Light On</button>
+        <button id="lightOff">Turn Light Off</button>
+
+        <script>
+        
+        document.getElementById('lightOn').onclick = function() {
+            fetch('http://localhost:3000/led')
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                });
+        };
+            
+        document.getElementById('lightOff').onclick = function(){
+            fetch('http://localhost:3000/off')
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                });
+        };
+        </script>
+        
+    </body>
+</html>
