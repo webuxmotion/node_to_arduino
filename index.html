@@ -12,7 +12,7 @@
         <script>
         
         document.getElementById('lightOn').onclick = function() {
-            fetch('http://localhost:3000/led')
+            fetch('http://192.168.0.105:3000/led')
                 .then((response) => {
                     return response.json();
                 })
@@ -22,7 +22,7 @@
         };
             
         document.getElementById('lightOff').onclick = function(){
-            fetch('http://localhost:3000/off')
+            fetch('http://192.168.0.105:3000/off')
                 .then((response) => {
                     return response.json();
                 })

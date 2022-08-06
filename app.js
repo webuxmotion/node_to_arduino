@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
+var cors = require('cors')
 var SerialPort = require('serialport').SerialPort;
 
 var port = 3000;
+
+app.use(cors())
 
 var arduinoCOMPort = "/dev/cu.usbserial-0001";
 
@@ -35,6 +38,6 @@ app.get('/:action', function (req, res) {
     return res.send({ action });
 });
 
-app.listen(port, function () {
+app.listen(port, '192.168.0.105', function () {
   console.log('Example app listening on port http://0.0.0.0:' + port + '!');
 });
