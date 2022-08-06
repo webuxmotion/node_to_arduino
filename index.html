@@ -3,12 +3,19 @@
     <head>
         <title>Communicating from Node.js to an Arduino</title>
     </head>
-    <body>
+    <body id="body">
         <h1>Communicating from Node.js to an Arduino</h1>
 
         <button id="lightOn">Turn Light On</button>
         <button id="lightOff">Turn Light Off</button>
 
+        <h2>form</h2>
+
+        <form action="" id="form">
+            <input type="text" id="input">
+        </form>
+
+        <script src="/socket.io/socket.io.js"></script>
         <script>
         
         document.getElementById('lightOn').onclick = function() {
@@ -30,6 +37,24 @@
                     console.log(data);
                 });
         };
+
+        var socket = io();
+
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (input.value) {
+            socket.emit('chat message', input.value);
+            input.value = '';
+            }
+        });
+
+        socket.on('data', function(data) {
+            console.log(data);
+            document.getElementById('body').style.opacity = data+"%"; 
+        });
         </script>
         
     </body>

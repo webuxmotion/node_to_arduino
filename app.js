@@ -1,5 +1,11 @@
 const express = require('express');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+const { ReadlineParser } = require('@serialport/parser-readline')
+
 var SerialPort = require('serialport').SerialPort;
 
 var port = 3000;
@@ -9,6 +15,25 @@ var arduinoCOMPort = "/dev/cu.usbserial-0001";
 var arduinoSerialPort = new SerialPort({ 
   path: arduinoCOMPort,
   baudRate: 9600
+});
+
+const parser = arduinoSerialPort.pipe(new ReadlineParser({ delimiter: '\r\n' }))
+
+io.on('connection', function(socket) {
+  console.log('Node is listening to port');
+
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
+    if (msg == 'on') {
+      arduinoSerialPort.write("w");
+    };
+  });
+});
+
+parser.on('data', function(data) {
+    
+  console.log('Received data from port: ' + data);
+  io.emit('data', data);
 });
 
 arduinoSerialPort.on('open',function() {
@@ -35,6 +60,6 @@ app.get('/:action', function (req, res) {
     return res.send({ action });
 });
 
-app.listen(port, function () {
+server.listen(port, function () {
   console.log('Example app listening on port http://0.0.0.0:' + port + '!');
 });

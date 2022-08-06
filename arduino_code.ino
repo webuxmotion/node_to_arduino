@@ -1,5 +1,9 @@
 int lightPin = 2;
 
+// for processPotentiometer()
+int percent = 0;
+int prevPercent = 0;
+
 void setup() {
   pinMode(13, OUTPUT);
   pinMode(lightPin, OUTPUT);
@@ -13,7 +17,9 @@ void loop() {
     convertToState(ReaderFromNode); // Convert character to state  
   }
  
-  delay(1000);
+  delay(100);
+
+  processPotentiometer();
 }
 
 void convertToState(char chr) {
@@ -22,11 +28,22 @@ void convertToState(char chr) {
   if(chr=='w'){
     digitalWrite(LED_BUILTIN, HIGH);
     digitalWrite(lightPin,HIGH);
-    delay(1000); 
+    delay(100); 
   }
   if(chr=='t'){
     digitalWrite(LED_BUILTIN, LOW);
     digitalWrite(lightPin,LOW);
-    delay(1000); 
+    delay(100); 
   }
+}
+
+void processPotentiometer() {
+  percent = round(analogRead(0) / 1024.00 * 100);
+  
+  if(percent != prevPercent) {
+    Serial.println(percent);
+    prevPercent = percent;
+  }
+  
+  delay(100);
 }
