@@ -9,6 +9,9 @@
         <button id="lightOn">Turn Light On</button>
         <button id="lightOff">Turn Light Off</button>
 
+        <h2>Potentiometer: <span id="pot">-</span></h2>
+        <h2>Led: <span id="led">-</span></h2>
+
         <h2>form</h2>
 
         <form action="" id="form">
@@ -19,23 +22,11 @@
         <script>
         
         document.getElementById('lightOn').onclick = function() {
-            fetch('http://localhost:3000/led')
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                });
+            fetch('http://localhost:3000/led');
         };
             
         document.getElementById('lightOff').onclick = function(){
-            fetch('http://localhost:3000/off')
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                });
+            fetch('http://localhost:3000/off');
         };
 
         var socket = io();
@@ -46,14 +37,21 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             if (input.value) {
-            socket.emit('chat message', input.value);
-            input.value = '';
+                socket.emit('chat message', input.value);
+                input.value = '';
             }
         });
 
         socket.on('data', function(data) {
-            console.log(data);
-            document.getElementById('body').style.opacity = data+"%"; 
+            const obj = JSON.parse(data);
+            console.log(obj);
+            
+            if ('potentiometr' in obj) {
+                document.querySelector('#pot').innerHTML = obj.potentiometr;
+            }
+            if ('led' in obj) {
+                document.querySelector('#led').innerHTML = obj.led ? 'On' : 'Off';
+            }
         });
         </script>
         
